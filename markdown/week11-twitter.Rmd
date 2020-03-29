@@ -8,29 +8,50 @@ output: pdf_document
 # Libraries
 ```{r}
 library(twitteR)
+library(ggplot2)
 ```
 
 
 # Data Import and Cleaning 
 
-#Analysis 
-
+Pulled the api, secret api, access, and secret access codes from twitter in orger to set up the twitter authorization. 
 ```{r}
 api <- "zkHmLKzPFWPc2HfCDbjUU8HP2"
 apiSecret <- "JZGwN3tqcQracHJwb2io97wRsLKFO6h1EY8MyEGz3RjGBMwXEx"
 access <- "48436651-M7DDZdx7f5BHIIHB4zlH34tMSKxDNLU0XOdD5FKN7"
 accessSecret <- "YR2BAv1bXDY9ejt0eaoBtK1y4aeup0Z67XmqtTezIbmF3"
-```
 
-#IDK what heading to put here 
-```{r}
 setup_twitter_oauth(api, apiSecret, access, accessSecret)
-tweets <-searchTwitter("#RStats", 1000)
+
+#Pulled the first 1000 tweets that mention the #rstats. Removed all of those that were retweets and not orginal tweets. Then created a dataframe out of the twitter list. 
+
+tweets <-searchTwitter("#rstats", 1000)
 tweets_clean <- strip_retweets(tweets)
 tweets_tbl <- twListToDF(tweets_clean)
 ```
-#Analysis 
-```{r}
 
+#Analysis 
+
+In this section a correlation test was run between the length of the number of characters in a tweet and the number of retweets. 
+```{r}
+cor.test(nchar(tweets_tbl$text), tweets_tbl$retweetCount)
+```
+A plot of the relationship between the length of a tweet and the number of retweets
+```{r}
+ggplot(tweets_tbl, aes(nchar(tweets_tbl$text), tweets_tbl$retweetCount))+
+  geom_point()
+```
+
+
+In this section a correlation test was run between the length of the number of characters in a tweet and the number of favorites. 
+
+```{r}
+cor.test(nchar(tweets_tbl$text), tweets_tbl$favoriteCount)
+```
+#A plot of the relationship between the length of a tweet and the number of favorites
+
+```{r}
+ggplot(tweets_tbl, aes(nchar(tweets_tbl$text), tweets_tbl$favoriteCount))+
+  geom_point()
 ```
 

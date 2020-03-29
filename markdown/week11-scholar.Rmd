@@ -1,0 +1,16 @@
+---
+title: "R Notebook"
+output: pdf_document
+---
+
+#Rstudio API code
+
+#Libraries
+```{r}
+library(rvest)
+library(ggplot2)
+```
+
+#Data import and cleaning 
+
+#Analysis 

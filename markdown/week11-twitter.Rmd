@@ -1,0 +1,36 @@
+---
+title: "R Notebook"
+output: pdf_document
+---
+
+# Rstudio API code
+
+# Libraries
+```{r}
+library(twitteR)
+```
+
+
+# Data Import and Cleaning 
+
+#Analysis 
+
+```{r}
+api <- "zkHmLKzPFWPc2HfCDbjUU8HP2"
+apiSecret <- "JZGwN3tqcQracHJwb2io97wRsLKFO6h1EY8MyEGz3RjGBMwXEx"
+access <- "48436651-M7DDZdx7f5BHIIHB4zlH34tMSKxDNLU0XOdD5FKN7"
+accessSecret <- "YR2BAv1bXDY9ejt0eaoBtK1y4aeup0Z67XmqtTezIbmF3"
+```
+
+#IDK what heading to put here 
+```{r}
+setup_twitter_oauth(api, apiSecret, access, accessSecret)
+tweets <-searchTwitter("#RStats", 1000)
+tweets_clean <- strip_retweets(tweets)
+tweets_tbl <- twListToDF(tweets_clean)
+```
+#Analysis 
+```{r}
+
+```
+

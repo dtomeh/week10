@@ -12,5 +12,17 @@ library(ggplot2)
 ```
 
 #Data import and cleaning 
+```{r}
+apa_html <-read_html("https://scholar.google.com/citations?hl=en&user=nx_vfuYAAAAJ")
+apa_node <- html_nodes(apa_html, "#gsc_a_b .gsc_a_y , #gsc_a_b .gsc_a_c , .gsc_a_at+ .gs_gray , .gsc_a_at")
+apa_text <- html_text(apa_node)
+apa_table <- html_table(apa_node, header = FALSE, trim = TRUE, fill = TRUE, dec = ".")
+colnames <- c("Article name", "Author list", "Year", "Citation count")
+```
+
+```{r}
+
+```
+
 
 #Analysis 

@@ -5,24 +5,46 @@ output: pdf_document
 
 #Rstudio API code
 
-#Libraries
+# Libraries
+Loading the libraries necessary to scrape data from google scholar and to plot the relationships of the data
 ```{r}
 library(rvest)
 library(ggplot2)
 ```
 
-#Data import and cleaning 
+# Data import and cleaning 
+pulling the citations, authors, years, and citation counts from the google scholar page of Paul Sackett. 
 ```{r}
 apa_html <-read_html("https://scholar.google.com/citations?hl=en&user=nx_vfuYAAAAJ")
 apa_node <- html_nodes(apa_html, "#gsc_a_b .gsc_a_y , #gsc_a_b .gsc_a_c , .gsc_a_at+ .gs_gray , .gsc_a_at")
 apa_text <- html_text(apa_node)
-apa_table <- html_table(apa_node, header = FALSE, trim = TRUE, fill = TRUE, dec = ".")
-colnames <- c("Article name", "Author list", "Year", "Citation count")
-```
 
-```{r}
+apa_tbl <- as_tibble(matrix(apa_text,nrow=20,ncol=4,byrow=TRUE,
+                                dimnames=list(c(),
+                                              c("Article Title","Authors","CitationCount","Year")))) %>%
+  mutate(Year=as.numeric(Year)) %>%
+  mutate(CitationCount = as.numeric(CitationCount))
 
+apa_tbl
 ```
 
 
 #Analysis 
+Finding the correlation between the year and the citation count of an article on the google scholar page for Paul Sackett. Calculated the correlation test with all information using cor.test and then pulled only the correlation estimate. 
+```{r}
+cor.test(apa_tbl$Year, apa_tbl$`CitationCount`)$estimate
+```
+
+# Visualization
+
+Scatter plot of the year versus the number of citations on the articles on Paul Sackett's google scholar page. A regression line is superimposed over the original scatter plot. 
+```{r}
+ggplot(apa_tbl, aes(apa_tbl$Year, apa_tbl$`CitationCount`)) + 
+  geom_point()+
+  geom_smooth(method="lm", se=FALSE) + 
+  labs(title = "Year of Citation Publication vs Number of times Cited", 
+       x="Year of Citation Publication", 
+       y="Number of times the article has been Cited")
+
+```
+

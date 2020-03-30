@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 # Rstudio API code
@@ -9,6 +11,7 @@ output: pdf_document
 ```{r}
 library(twitteR)
 library(ggplot2)
+library(tidyverse)
 ```
 
 
@@ -27,31 +30,43 @@ setup_twitter_oauth(api, apiSecret, access, accessSecret)
 
 tweets <-searchTwitter("#rstats", 1000)
 tweets_clean <- strip_retweets(tweets)
-tweets_tbl <- twListToDF(tweets_clean)
+tweets_tbl <- twListToDF(tweets_clean) %>% 
+  select(text,screenName,favoriteCount,retweetCount)
 ```
 
 #Analysis 
 
 In this section a correlation test was run between the length of the number of characters in a tweet and the number of retweets. 
 ```{r}
-cor.test(nchar(tweets_tbl$text), tweets_tbl$retweetCount)
+cor.test(nchar(tweets_tbl$text), tweets_tbl$retweetCount)$estimate
 ```
-A plot of the relationship between the length of a tweet and the number of retweets
-```{r}
-ggplot(tweets_tbl, aes(nchar(tweets_tbl$text), tweets_tbl$retweetCount))+
-  geom_point()
-```
-
 
 In this section a correlation test was run between the length of the number of characters in a tweet and the number of favorites. 
 
 ```{r}
-cor.test(nchar(tweets_tbl$text), tweets_tbl$favoriteCount)
+cor.test(nchar(tweets_tbl$text), tweets_tbl$favoriteCount)$estimate
 ```
+
+# Visualization
+
+A plot of the relationship between the length of a tweet and the number of retweets
+```{r}
+ggplot(tweets_tbl, aes(nchar(tweets_tbl$text), tweets_tbl$retweetCount))+
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE) + 
+  labs( title = "Length of a tweet vs Number of Retweets", 
+        x="Length of tweet",
+        y="Number of retweets")
+```
+
 #A plot of the relationship between the length of a tweet and the number of favorites
 
 ```{r}
 ggplot(tweets_tbl, aes(nchar(tweets_tbl$text), tweets_tbl$favoriteCount))+
-  geom_point()
+  geom_point() + 
+  geom_smooth(method="lm", se=FALSE) + 
+  labs( title = "Length of a tweet vs Number of Favorites", 
+        x="Length of tweet",
+        y="Number of Favorites")
 ```
 

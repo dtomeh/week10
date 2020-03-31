@@ -1,0 +1,46 @@
+---
+title: "R Notebook"
+author: Dana Tomeh
+output: word_document
+---
+
+# Rstudio API Code 
+
+# Libraries 
+
+loading the libraries necessary to scrape data from qualtrics and then analyze, and visualize it. 
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(qualtRics)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+```
+
+# Data Import and Cleaning 
+Set up the Qualtrics API, imported all surveys that I have created using the all_surveys() function from the qualtRics package. Mutated the date from character to POSIXct format in order to use for bar chart.
+```{r}
+qualtrics_api_credentials(api_key = "apikeygoeshere", 
+                          base_url = "umn.ca1.qualtrics.com",
+                          install = TRUE,
+                          overwrite = TRUE)
+
+survey_tbl <- all_surveys() %>%
+  mutate(creationDate=ymd_hms(creationDate)) 
+
+```
+
+# Analysis 
+
+# Visualization 
+
+Creating a bar plot of the number of surveys that have been created on a given date using ggplot from the gpplot2 package paired with geom_bar() to indicate the desired bar chart format.
+```{r}
+ggplot(survey_tbl, aes(creationDate))+ 
+  geom_bar() + 
+  labs(title = "Number of surveys created on a given date", 
+       x= "Date", 
+       y= "Number of Surveys Created")
+```
+
